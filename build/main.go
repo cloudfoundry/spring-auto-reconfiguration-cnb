@@ -22,6 +22,7 @@ import (
 
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/spring-auto-reconfiguration-cnb/autoreconfiguration"
 )
 
 func main() {
@@ -40,5 +41,15 @@ func main() {
 }
 
 func b(build build.Build) (int, error) {
+	build.Logger.FirstLine(build.Logger.PrettyIdentity(build.Buildpack))
+
+	if a, ok, err := autoreconfiguration.NewAutoReconfiguration(build); err != nil {
+		return build.Failure(102), err
+	} else if ok {
+		if err := a.Contribute(); err != nil {
+			return build.Failure(103), err
+		}
+	}
+
 	return build.Success(buildplan.BuildPlan{})
 }

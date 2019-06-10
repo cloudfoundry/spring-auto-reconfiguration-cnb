@@ -19,8 +19,13 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"regexp"
 
+	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/libcfbuildpack/detect"
+	"github.com/cloudfoundry/libcfbuildpack/helper"
+	"github.com/cloudfoundry/spring-auto-reconfiguration-cnb/autoreconfiguration"
 )
 
 func main() {
@@ -39,5 +44,14 @@ func main() {
 }
 
 func d(detect detect.Detect) (int, error) {
+	j, err := helper.HasFile(detect.Application.Root, regexp.MustCompile(filepath.Join(".*", ".*spring-core.*\\.jar")))
+	if err != nil {
+		return detect.Error(102), err
+	}
+
+	if j {
+		return detect.Pass(buildplan.BuildPlan{autoreconfiguration.Dependency: detect.BuildPlan[autoreconfiguration.Dependency]})
+	}
+
 	return detect.Fail(), nil
 }
