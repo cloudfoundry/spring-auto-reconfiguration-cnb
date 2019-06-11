@@ -44,12 +44,9 @@ func main() {
 }
 
 func d(detect detect.Detect) (int, error) {
-	j, err := helper.HasFile(detect.Application.Root, regexp.MustCompile(filepath.Join(".*", ".*spring-core.*\\.jar")))
-	if err != nil {
+	if exist, err := helper.HasFile(detect.Application.Root, regexp.MustCompile(filepath.Join(".*", ".*spring-core.*\\.jar"))); err != nil {
 		return detect.Error(102), err
-	}
-
-	if j {
+	} else if exist {
 		return detect.Pass(buildplan.BuildPlan{autoreconfiguration.Dependency: detect.BuildPlan[autoreconfiguration.Dependency]})
 	}
 
