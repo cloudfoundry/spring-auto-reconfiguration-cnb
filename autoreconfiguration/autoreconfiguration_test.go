@@ -39,24 +39,36 @@ func TestAutoReconfiguration(t *testing.T) {
 			f = test.NewBuildFactory(t)
 		})
 
-		it("returns true if build plan does exist", func() {
+		it("returns false if build plan does not exist", func() {
+			test.TouchFile(t, filepath.Join(f.Build.Application.Root, "spring-core-1.2.3.RELEASE.jar"))
+
+			_, ok, err := autoreconfiguration.NewAutoReconfiguration(f.Build)
+			g.Expect(err).NotTo(HaveOccurred())
+			g.Expect(ok).To(BeFalse())
+		})
+
+		it("returns false if spring core jar file does not exist", func() {
+			f.AddBuildPlan(autoreconfiguration.Dependency, buildplan.Dependency{})
+
+			_, ok, err := autoreconfiguration.NewAutoReconfiguration(f.Build)
+			g.Expect(err).NotTo(HaveOccurred())
+			g.Expect(ok).To(BeFalse())
+		})
+
+		it("returns true if build plan and spring core jar file both exist", func() {
 			f.AddBuildPlan(autoreconfiguration.Dependency, buildplan.Dependency{})
 			f.AddDependency(autoreconfiguration.Dependency, filepath.Join("testdata", "stub-auto-reconfiguration.jar"))
+			test.TouchFile(t, filepath.Join(f.Build.Application.Root, "spring-core-1.2.3.RELEASE.jar"))
 
 			_, ok, err := autoreconfiguration.NewAutoReconfiguration(f.Build)
 			g.Expect(err).NotTo(HaveOccurred())
 			g.Expect(ok).To(BeTrue())
 		})
 
-		it("returns false if build plan does not exist", func() {
-			_, ok, err := autoreconfiguration.NewAutoReconfiguration(f.Build)
-			g.Expect(err).NotTo(HaveOccurred())
-			g.Expect(ok).To(BeFalse())
-		})
-
 		it("contributes jar", func() {
 			f.AddBuildPlan(autoreconfiguration.Dependency, buildplan.Dependency{})
 			f.AddDependency(autoreconfiguration.Dependency, filepath.Join("testdata", "stub-auto-reconfiguration.jar"))
+			test.TouchFile(t, filepath.Join(f.Build.Application.Root, "test", "spring-core-1.2.3.RELEASE.jar"))
 
 			y, ok, err := autoreconfiguration.NewAutoReconfiguration(f.Build)
 			g.Expect(err).NotTo(HaveOccurred())

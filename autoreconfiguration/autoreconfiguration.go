@@ -18,6 +18,7 @@ package autoreconfiguration
 
 import (
 	"path/filepath"
+	"regexp"
 
 	"github.com/cloudfoundry/libcfbuildpack/build"
 	"github.com/cloudfoundry/libcfbuildpack/helper"
@@ -46,10 +47,17 @@ func (c AutoReconfiguration) Contribute() error {
 	}, layers.Launch)
 }
 
-// NewAutoReconfiguration creates a new AutoReconfiguration instance.
+// NewAutoReconfiguration creates a new AutoReconfiguration instance. OK is true if
+// a spring core jar is found in the application.
 func NewAutoReconfiguration(build build.Build) (AutoReconfiguration, bool, error) {
 	bp, ok := build.BuildPlan[Dependency]
 	if !ok {
+		return AutoReconfiguration{}, false, nil
+	}
+
+	if exist, err := helper.HasFile(build.Application.Root, regexp.MustCompile(filepath.Join(".*", ".*spring-core.*\\.jar"))); err != nil {
+		return AutoReconfiguration{}, false, err
+	} else if !exist {
 		return AutoReconfiguration{}, false, nil
 	}
 

@@ -17,13 +17,10 @@
 package main
 
 import (
-	"path/filepath"
 	"testing"
 
-	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/buildpack/libbuildpack/detect"
 	"github.com/cloudfoundry/libcfbuildpack/test"
-	"github.com/cloudfoundry/spring-auto-reconfiguration-cnb/autoreconfiguration"
 	. "github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
@@ -40,17 +37,8 @@ func TestDetect(t *testing.T) {
 			f = test.NewDetectFactory(t)
 		})
 
-		it("passes with a spring core jar present", func() {
-			test.TouchFile(t, filepath.Join(f.Detect.Application.Root, "spring-core-1.2.3.RELEASE.jar"))
-
+		it("always passes", func() {
 			g.Expect(d(f.Detect)).To(Equal(detect.PassStatusCode))
-			g.Expect(f.Output).To(Equal(buildplan.BuildPlan{
-				autoreconfiguration.Dependency: buildplan.Dependency{},
-			}))
-		})
-
-		it("fails with no spring core jar present", func() {
-			g.Expect(d(f.Detect)).To(Equal(detect.FailStatusCode))
 		})
 	}, spec.Report(report.Terminal{}))
 }
