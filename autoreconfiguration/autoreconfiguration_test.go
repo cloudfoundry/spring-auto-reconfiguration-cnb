@@ -23,7 +23,7 @@ import (
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/cloudfoundry/spring-auto-reconfiguration-cnb/autoreconfiguration"
-	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
@@ -31,7 +31,7 @@ import (
 func TestAutoReconfiguration(t *testing.T) {
 	spec.Run(t, "AutoReconfiguration", func(t *testing.T, _ spec.G, it spec.S) {
 
-		g := NewGomegaWithT(t)
+		g := gomega.NewWithT(t)
 
 		var f *test.BuildFactory
 
@@ -43,16 +43,16 @@ func TestAutoReconfiguration(t *testing.T) {
 			test.TouchFile(t, filepath.Join(f.Build.Application.Root, "spring-core-1.2.3.RELEASE.jar"))
 
 			_, ok, err := autoreconfiguration.NewAutoReconfiguration(f.Build)
-			g.Expect(err).NotTo(HaveOccurred())
-			g.Expect(ok).To(BeFalse())
+			g.Expect(err).NotTo(gomega.HaveOccurred())
+			g.Expect(ok).To(gomega.BeFalse())
 		})
 
 		it("returns false if spring core jar file does not exist", func() {
 			f.AddBuildPlan(autoreconfiguration.Dependency, buildplan.Dependency{})
 
 			_, ok, err := autoreconfiguration.NewAutoReconfiguration(f.Build)
-			g.Expect(err).NotTo(HaveOccurred())
-			g.Expect(ok).To(BeFalse())
+			g.Expect(err).NotTo(gomega.HaveOccurred())
+			g.Expect(ok).To(gomega.BeFalse())
 		})
 
 		it("returns true if build plan and spring core jar file both exist", func() {
@@ -61,8 +61,8 @@ func TestAutoReconfiguration(t *testing.T) {
 			test.TouchFile(t, filepath.Join(f.Build.Application.Root, "spring-core-1.2.3.RELEASE.jar"))
 
 			_, ok, err := autoreconfiguration.NewAutoReconfiguration(f.Build)
-			g.Expect(err).NotTo(HaveOccurred())
-			g.Expect(ok).To(BeTrue())
+			g.Expect(err).NotTo(gomega.HaveOccurred())
+			g.Expect(ok).To(gomega.BeTrue())
 		})
 
 		it("contributes jar", func() {
@@ -71,14 +71,14 @@ func TestAutoReconfiguration(t *testing.T) {
 			test.TouchFile(t, filepath.Join(f.Build.Application.Root, "test", "spring-core-1.2.3.RELEASE.jar"))
 
 			y, ok, err := autoreconfiguration.NewAutoReconfiguration(f.Build)
-			g.Expect(err).NotTo(HaveOccurred())
-			g.Expect(ok).To(BeTrue())
+			g.Expect(err).NotTo(gomega.HaveOccurred())
+			g.Expect(ok).To(gomega.BeTrue())
 
-			g.Expect(y.Contribute()).To(Succeed())
+			g.Expect(y.Contribute()).To(gomega.Succeed())
 
 			layer := f.Build.Layers.Layer("auto-reconfiguration")
 			g.Expect(layer).To(test.HaveLayerMetadata(false, false, true))
-			g.Expect(filepath.Join(layer.Root, "stub-auto-reconfiguration.jar")).To(BeARegularFile())
+			g.Expect(filepath.Join(layer.Root, "stub-auto-reconfiguration.jar")).To(gomega.BeARegularFile())
 			g.Expect(layer).To(test.HaveAppendPathLaunchEnvironment("CLASSPATH", "%s",
 				filepath.Join(layer.Root, "stub-auto-reconfiguration.jar")))
 		})

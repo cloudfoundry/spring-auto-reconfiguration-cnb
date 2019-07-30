@@ -21,7 +21,7 @@ import (
 
 	"github.com/buildpack/libbuildpack/detect"
 	"github.com/cloudfoundry/libcfbuildpack/test"
-	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
@@ -29,7 +29,7 @@ import (
 func TestDetect(t *testing.T) {
 	spec.Run(t, "Detect", func(t *testing.T, _ spec.G, it spec.S) {
 
-		g := NewGomegaWithT(t)
+		g := gomega.NewWithT(t)
 
 		var f *test.DetectFactory
 
@@ -38,7 +38,7 @@ func TestDetect(t *testing.T) {
 		})
 
 		it("always passes", func() {
-			g.Expect(d(f.Detect)).To(Equal(detect.PassStatusCode))
+			g.Expect(d(f.Detect)).To(gomega.Equal(detect.PassStatusCode))
 		})
 	}, spec.Report(report.Terminal{}))
 }
