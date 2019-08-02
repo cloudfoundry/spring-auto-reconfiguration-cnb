@@ -21,6 +21,7 @@ import (
 	"os"
 
 	"github.com/buildpack/libbuildpack/buildplan"
+	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/detect"
 	"github.com/cloudfoundry/spring-auto-reconfiguration-cnb/autoreconfiguration"
 )
@@ -41,5 +42,13 @@ func main() {
 }
 
 func d(detect detect.Detect) (int, error) {
-	return detect.Pass(buildplan.BuildPlan{autoreconfiguration.Dependency: detect.BuildPlan[autoreconfiguration.Dependency]})
+	return detect.Pass(buildplan.Plan{
+		Provides: []buildplan.Provided{
+			{Name: autoreconfiguration.Dependency},
+		},
+		Requires: []buildplan.Required{
+			{Name: autoreconfiguration.Dependency},
+			{Name: jvmapplication.Dependency},
+		},
+	})
 }

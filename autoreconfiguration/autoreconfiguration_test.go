@@ -20,7 +20,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/buildpack/libbuildpack/buildplan"
+	"github.com/cloudfoundry/libcfbuildpack/buildpackplan"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/cloudfoundry/spring-auto-reconfiguration-cnb/autoreconfiguration"
 	"github.com/onsi/gomega"
@@ -48,7 +48,7 @@ func TestAutoReconfiguration(t *testing.T) {
 		})
 
 		it("returns false if spring core jar file does not exist", func() {
-			f.AddBuildPlan(autoreconfiguration.Dependency, buildplan.Dependency{})
+			f.AddPlan(buildpackplan.Plan{Name: autoreconfiguration.Dependency})
 
 			_, ok, err := autoreconfiguration.NewAutoReconfiguration(f.Build)
 			g.Expect(err).NotTo(gomega.HaveOccurred())
@@ -56,7 +56,7 @@ func TestAutoReconfiguration(t *testing.T) {
 		})
 
 		it("returns true if build plan and spring core jar file both exist", func() {
-			f.AddBuildPlan(autoreconfiguration.Dependency, buildplan.Dependency{})
+			f.AddPlan(buildpackplan.Plan{Name: autoreconfiguration.Dependency})
 			f.AddDependency(autoreconfiguration.Dependency, filepath.Join("testdata", "stub-auto-reconfiguration.jar"))
 			test.TouchFile(t, filepath.Join(f.Build.Application.Root, "spring-core-1.2.3.RELEASE.jar"))
 
@@ -66,7 +66,7 @@ func TestAutoReconfiguration(t *testing.T) {
 		})
 
 		it("contributes jar", func() {
-			f.AddBuildPlan(autoreconfiguration.Dependency, buildplan.Dependency{})
+			f.AddPlan(buildpackplan.Plan{Name: autoreconfiguration.Dependency})
 			f.AddDependency(autoreconfiguration.Dependency, filepath.Join("testdata", "stub-auto-reconfiguration.jar"))
 			test.TouchFile(t, filepath.Join(f.Build.Application.Root, "test", "spring-core-1.2.3.RELEASE.jar"))
 

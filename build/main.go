@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/libcfbuildpack/build"
 	"github.com/cloudfoundry/spring-auto-reconfiguration-cnb/autoreconfiguration"
 )
@@ -51,5 +50,5 @@ func b(build build.Build) (int, error) {
 		}
 	}
 
-	return build.Success(buildplan.BuildPlan{})
+	return build.Success()
 }

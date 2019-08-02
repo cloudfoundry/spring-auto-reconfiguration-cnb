@@ -50,7 +50,7 @@ func (c AutoReconfiguration) Contribute() error {
 // NewAutoReconfiguration creates a new AutoReconfiguration instance. OK is true if
 // a spring core jar is found in the application.
 func NewAutoReconfiguration(build build.Build) (AutoReconfiguration, bool, error) {
-	bp, ok := build.BuildPlan[Dependency]
+	p, ok, err := build.Plans.GetShallowMerged(Dependency)
 	if !ok {
 		return AutoReconfiguration{}, false, nil
 	}
@@ -66,7 +66,7 @@ func NewAutoReconfiguration(build build.Build) (AutoReconfiguration, bool, error
 		return AutoReconfiguration{}, false, err
 	}
 
-	dep, err := deps.Best(Dependency, bp.Version, build.Stack)
+	dep, err := deps.Best(Dependency, p.Version, build.Stack)
 	if err != nil {
 		return AutoReconfiguration{}, false, err
 	}
