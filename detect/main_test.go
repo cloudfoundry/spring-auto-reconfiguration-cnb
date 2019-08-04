@@ -19,8 +19,11 @@ package main
 import (
 	"testing"
 
+	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/buildpack/libbuildpack/detect"
+	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/test"
+	"github.com/cloudfoundry/spring-auto-reconfiguration-cnb/autoreconfiguration"
 	"github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
@@ -39,6 +42,15 @@ func TestDetect(t *testing.T) {
 
 		it("always passes", func() {
 			g.Expect(d(f.Detect)).To(gomega.Equal(detect.PassStatusCode))
+			g.Expect(f.Plans).To(test.HavePlans(buildplan.Plan{
+				Provides: []buildplan.Provided{
+					{Name: autoreconfiguration.Dependency},
+				},
+				Requires: []buildplan.Required{
+					{Name: autoreconfiguration.Dependency},
+					{Name: jvmapplication.Dependency},
+				},
+			}))
 		})
 	}, spec.Report(report.Terminal{}))
 }
