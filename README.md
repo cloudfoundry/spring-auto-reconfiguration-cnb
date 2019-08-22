@@ -1,5 +1,5 @@
 # `spring-auto-reconfiguration-cnb`
-The Spring Auto-reconfiguration Buildpack is a Cloud Native Buildpack V3 that provides Auto-reconfiguration functionality to Spring applications.
+The Cloud Foundry Spring Auto-reconfiguration Buildpack is a Cloud Native Buildpack V3 that provides Auto-reconfiguration functionality to Spring applications.
 
 ## Detection
 The detection phase passes if:
