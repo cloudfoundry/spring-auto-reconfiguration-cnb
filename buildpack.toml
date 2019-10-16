@@ -28,9 +28,9 @@ id = "org.cloudfoundry.stacks.cflinuxfs3"
 [[metadata.dependencies]]
 id      = "auto-reconfiguration"
 name    = "Spring Auto-reconfiguration"
-version = "2.10.0"
-uri     = "https://repo.spring.io/release/org/cloudfoundry/java-buildpack-auto-reconfiguration/2.10.0.RELEASE/java-buildpack-auto-reconfiguration-2.10.0.RELEASE.jar"
-sha256  = "7c663468641957b7fc40d65d91d68e405d6675c818a1cbeb7c998d3b83b5cc12"
+version = "2.11.0"
+uri     = "https://repo.spring.io/release/org/cloudfoundry/java-buildpack-auto-reconfiguration/2.11.0.RELEASE/java-buildpack-auto-reconfiguration-2.11.0.RELEASE.jar"
+sha256  = "46ab131165317d91fd4ad3186abf755222744e2d277dc413def06f3ad45ab150"
 stacks  = [ "io.buildpacks.stacks.bionic", "org.cloudfoundry.stacks.cflinuxfs3" ]
 
   [[metadata.dependencies.licenses]]
