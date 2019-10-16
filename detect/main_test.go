@@ -40,7 +40,7 @@ func TestDetect(t *testing.T) {
 			f = test.NewDetectFactory(t)
 		})
 
-		it("always passes", func() {
+		it("passes without BP_AUTO_RECONFIGURATION_ENABLED set", func() {
 			g.Expect(d(f.Detect)).To(gomega.Equal(detect.PassStatusCode))
 			g.Expect(f.Plans).To(test.HavePlans(buildplan.Plan{
 				Provides: []buildplan.Provided{
@@ -51,6 +51,28 @@ func TestDetect(t *testing.T) {
 					{Name: jvmapplication.Dependency},
 				},
 			}))
+		})
+
+		it("passes with BP_AUTO_RECONFIGURATION_ENABLED set to true", func() {
+			defer test.ReplaceEnv(t, "BP_AUTO_RECONFIGURATION_ENABLED", "true")()
+
+			g.Expect(d(f.Detect)).To(gomega.Equal(detect.PassStatusCode))
+			g.Expect(f.Plans).To(test.HavePlans(buildplan.Plan{
+				Provides: []buildplan.Provided{
+					{Name: autoreconfiguration.Dependency},
+				},
+				Requires: []buildplan.Required{
+					{Name: autoreconfiguration.Dependency},
+					{Name: jvmapplication.Dependency},
+				},
+			}))
+		})
+
+
+		it("fails with BP_AUTO_RECONFIGURATION_ENABLED set to false", func() {
+			defer test.ReplaceEnv(t, "BP_AUTO_RECONFIGURATION_ENABLED", "false")()
+
+			g.Expect(d(f.Detect)).To(gomega.Equal(detect.FailStatusCode))
 		})
 	}, spec.Report(report.Terminal{}))
 }
