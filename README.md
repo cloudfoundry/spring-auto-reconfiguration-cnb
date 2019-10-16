@@ -1,20 +1,29 @@
 # `spring-auto-reconfiguration-cnb`
-The Cloud Foundry Spring Auto-reconfiguration Buildpack is a Cloud Native Buildpack V3 that provides Auto-reconfiguration functionality to Spring applications.
+The Cloud Foundry Spring Auto-reconfiguration Buildpack provides [Auto-reconfiguration][a] functionality to Spring applications.
 
-## Detection
-The detection phase passes if:
+[a]: https://github.com/cloudfoundry/java-buildpack-auto-reconfiguration#what-is-auto-reconfiguration
 
-* The build plan contains `jvm-application`
-  * Contributes `auto-reconfiguration` to the build plan
+## Behavior
+The buildpack will participate if all of the following conditions are met
 
-## Build
-If the build plan contains
+* The application is a Java application
+* A `spring-core` JAR exists in the application
+* `BP_AUTO_RECONFIGURATION` is set to `true` (or unset)
 
-* `auto-reconfiguration`
-  * Checks for the existence of a `spring-core` jar in the application.
-  * If found,
-    * Contributes the Spring Auto-reconfiguration jar to a layer marked launch.
-    * Adds the Spring Auto-reconfiguration jar to the classpath.
+The buildpack will do the following:
+* Contribute the Spring Auto-reconfiguration JAR and add it to the classpath
+
+## Configuration
+| Environment Variable | Description
+| -------------------- | -----------
+| `$BP_AUTO_RECONFIGURATION_ENABLED` | Boolean value indicating whether this buildpack should participate.  Defaults to `true`.
+
+## Detail
+* **Provides**
+  * `auto-reconfiguration`
+* **Requires**
+  * `auto-reconfiguration`
+  * `jvm-application` 
 
 ## License
 This buildpack is released under version 2.0 of the [Apache License][a].

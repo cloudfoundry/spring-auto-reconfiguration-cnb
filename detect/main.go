@@ -19,6 +19,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
@@ -42,6 +43,20 @@ func main() {
 }
 
 func d(detect detect.Detect) (int, error) {
+	e := true
+
+	if v, ok := os.LookupEnv("BP_AUTO_RECONFIGURATION_ENABLED"); ok {
+		if f, err := strconv.ParseBool(v); err != nil {
+			return detect.Error(102), err
+		} else {
+			e = f
+		}
+	}
+
+	if !e {
+		return detect.Fail(), nil
+	}
+
 	return detect.Pass(buildplan.Plan{
 		Provides: []buildplan.Provided{
 			{Name: autoreconfiguration.Dependency},
