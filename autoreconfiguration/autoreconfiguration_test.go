@@ -79,7 +79,7 @@ func TestAutoReconfiguration(t *testing.T) {
 			layer := f.Build.Layers.Layer("auto-reconfiguration")
 			g.Expect(layer).To(test.HaveLayerMetadata(false, false, true))
 			g.Expect(filepath.Join(layer.Root, "stub-auto-reconfiguration.jar")).To(gomega.BeARegularFile())
-			g.Expect(layer).To(test.HaveAppendPathLaunchEnvironment("CLASSPATH", "%s",
+			g.Expect(layer).To(test.HavePrependPathLaunchEnvironment("CLASSPATH", "%s",
 				filepath.Join(layer.Root, "stub-auto-reconfiguration.jar")))
 		})
 	}, spec.Report(report.Terminal{}))

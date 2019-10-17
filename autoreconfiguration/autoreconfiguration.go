@@ -43,7 +43,7 @@ func (c AutoReconfiguration) Contribute() error {
 			return err
 		}
 
-		return layer.AppendPathLaunchEnv("CLASSPATH", "%s", destination)
+		return layer.PrependPathLaunchEnv("CLASSPATH", "%s", destination)
 	}, layers.Launch)
 }
 
