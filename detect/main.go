@@ -22,7 +22,6 @@ import (
 	"strconv"
 
 	"github.com/buildpack/libbuildpack/buildplan"
-	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/detect"
 	"github.com/cloudfoundry/spring-auto-reconfiguration-cnb/autoreconfiguration"
 )
@@ -63,7 +62,7 @@ func d(detect detect.Detect) (int, error) {
 		},
 		Requires: []buildplan.Required{
 			{Name: autoreconfiguration.Dependency},
-			{Name: jvmapplication.Dependency},
+			{Name: "jvm-application"},
 		},
 	})
 }

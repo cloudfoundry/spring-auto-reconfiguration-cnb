@@ -21,7 +21,6 @@ import (
 
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/buildpack/libbuildpack/detect"
-	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/cloudfoundry/spring-auto-reconfiguration-cnb/autoreconfiguration"
 	"github.com/onsi/gomega"
@@ -48,7 +47,7 @@ func TestDetect(t *testing.T) {
 				},
 				Requires: []buildplan.Required{
 					{Name: autoreconfiguration.Dependency},
-					{Name: jvmapplication.Dependency},
+					{Name: "jvm-application"},
 				},
 			}))
 		})
@@ -63,11 +62,10 @@ func TestDetect(t *testing.T) {
 				},
 				Requires: []buildplan.Required{
 					{Name: autoreconfiguration.Dependency},
-					{Name: jvmapplication.Dependency},
+					{Name: "jvm-application"},
 				},
 			}))
 		})
-
 
 		it("fails with BP_AUTO_RECONFIGURATION_ENABLED set to false", func() {
 			defer test.ReplaceEnv(t, "BP_AUTO_RECONFIGURATION_ENABLED", "false")()
